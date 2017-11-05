@@ -1,0 +1,6 @@
+// The application depends on a file named variables.js
+// This is a stub for it.
+
+module.exports = {
+  REDDIT_USER: ''
+};

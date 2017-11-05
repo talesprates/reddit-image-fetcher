@@ -1,0 +1,37 @@
+{
+  "name": "reddit-image-fetcher",
+  "version": "1.0.0",
+  "description": "fetches all images posted from one user on reddit",
+  "main": "index.js",
+  "scripts": {
+    "start": "./node_modules/protractor/bin/protractor conf.js",
+    "webdriver": "./node_modules/protractor/bin/webdriver-manager start > /dev/null 2>&1 &",
+    "udpate": "./node_modules/protractor/bin/webdriver-manager update > /dev/null 2>&1 &"
+  },
+  "author": "Tales Prates",
+  "license": "MIT",
+  "dependencies": {
+    "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
+    "eslint-plugin-node": "^4.2.2",
+    "gfycat-sdk": "^1.4.10",
+    "image-downloader": "^3.3.0",
+    "jasmine": "^2.8.0",
+    "jasmine-core": "^2.5.2",
+    "jasmine-spec-reporter": "^3.3.0",
+    "mkdirp-promise": "^5.0.1",
+    "node-wget": "^0.4.2",
+    "protractor": "^5.1.1",
+    "request": "^2.83.0",
+    "request-promise": "^4.2.2",
+    "selenium-webdriver": "^3.6.0"
+  },
+  "devDependencies": {
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb-base": "^11.1.3",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^3.0.1"
+  }
+}
