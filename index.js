@@ -1,54 +1,59 @@
 const imgur = require('./integrations/imgur');
 const gfycat = require('./integrations/gfycat');
-const { REDDIT_USERS } = require('./variables');
 const fs = require('fs');
 const request = require('request');
 
 const extractMediaPattern = /^.*\/(.*((.jpg)|(.png)|(.gifv)|(.gif)|(.mp4)|(.jpeg)))(\?[0-9])?$/;
 const IMAGE_NAME = 1;
+const redditUser = process.argv[2];
 
-let apiCalls = 0;
+if (redditUser == null) {
+  console.log('usage: node index.js {{redditUser}}');
+  process.exit(1);
+}
 
-REDDIT_USERS.forEach((REDDIT_USER) => {
-  const rawJson = fs.readFileSync(`./users/${REDDIT_USER}/redditUserImagesCollection.json`);
-  const methods = JSON.parse(rawJson);
+// let apiCalls = 0;
 
-  apiCalls = apiCalls + methods.imgurGalleries.length + methods.imgurImages.length;
+const rawJson = fs.readFileSync(`./users/${redditUser}/redditUserImagesCollection.json`);
+const { directImages, gfycatImages, imgurImages, imgurGalleries } = JSON.parse(rawJson);
 
-  Promise.all(methods.directImages.map(image => downloadImage(REDDIT_USER, image)))
-    .then()
-    .catch(`error downloading direct images from ${REDDIT_USER}`);
+// apiCalls = apiCalls + imgurGalleries.length + imgurImages.length;
 
-  methods.imgurGalleries.forEach((gallery) => {
-    imgur.getAlbum(gallery)
-      .then(images => images.forEach(image => downloadImage(REDDIT_USER, image)))
-      .catch(console.log);
-  });
-  methods.imgurImages.forEach((image) => {
-    imgur.getImage(image)
-      .then(imageUrl => downloadImage(REDDIT_USER, imageUrl))
-      .catch(console.log);
-  });
+Promise.all(directImages.map(image => downloadImage(image)))
+  .then(() => console.log('direct images downloaded'))
+  .catch(error => console.log(`error downloading direct images from ${redditUser} (${error})`));
 
-  methods.gfycatImages.forEach(image =>
-    gfycat.getImage(image)
-      .then(imageUrl => downloadImage(REDDIT_USER, imageUrl, 60000))
-      .catch(console.log));
+imgurGalleries.forEach((gallery) => {
+  imgur.getAlbum(gallery)
+    .then(images => images.forEach(image => downloadImage(image)))
+    .catch(console.log);
 });
 
-console.log(apiCalls);
+imgurImages.forEach((image) => {
+  imgur.getImage(image)
+    .then(imageUrl => downloadImage(imageUrl))
+    .catch(console.log);
+});
 
-function downloadImage(REDDIT_USER, uri) {
+gfycat.authenticate().then((accessToken) => {
+  Promise.all(gfycatImages.map(gfyId => gfycat.getImage(accessToken, gfyId).then(downloadImage)))
+    .then(() => console.log('gfycat images downloaded'))
+    .catch(error => console.log(`error downloading gfycat images from ${redditUser} (${error})`));
+});
+
+// console.log(apiCalls);
+
+function downloadImage(uri) {
   return new Promise((resolve, reject) => {
-    if (!fs.existsSync(`./users/${REDDIT_USER}/${uri.match(extractMediaPattern)[IMAGE_NAME]}`)) {
-      request({ uri })
-        .pipe(fs.createWriteStream(`./users/${REDDIT_USER}/${uri.match(extractMediaPattern)[IMAGE_NAME]}`))
-        .on('close', () => {
-          resolve();
-        })
-        .on('error', (error) => {
-          reject(error);
-        });
-    }
+    fs.access(`./users/${redditUser}/${uri.match(extractMediaPattern)[IMAGE_NAME]}`, fs.constants.R_OK, (err) => {
+      if (!err) {
+        return resolve();
+      }
+
+      return request({ uri })
+        .pipe(fs.createWriteStream(`./users/${redditUser}/${uri.match(extractMediaPattern)[IMAGE_NAME]}`))
+        .on('close', resolve)
+        .on('error', reject);
+    });
   });
 }

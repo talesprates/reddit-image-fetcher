@@ -54,7 +54,6 @@ function waitElementVisible(target) {
 }
 
 function getElement(target) {
-  // When you pass the return of By()
   if (target.using) {
     return element(target);
   }
@@ -63,6 +62,5 @@ function getElement(target) {
     return $(target);
   }
 
-  // It is already the result of element(By()) or $()
   return target;
 }

@@ -9,31 +9,41 @@ module.exports = {
 
 function getAlbum(albumHash) {
   return new Promise((resolve, reject) => {
-    const options = {
-      uri: `https://api.imgur.com/3/album/${albumHash}/images`,
-      headers: {
-        Authorization: `Client-ID ${credentials['Client-ID']}`
-      },
-      json: true
-    };
-    request(options)
+    getRemainingCredits().then(({ UserRemaining }) => {
+      if (UserRemaining < 50) {
+        reject('api calls limit reached');
+      }
+      const options = {
+        uri: `https://api.imgur.com/3/album/${albumHash}/images`,
+        headers: {
+          Authorization: `Client-ID ${credentials['Client-ID']}`
+        },
+        json: true
+      };
+      request(options)
       .then(imgurResponse => Promise.all(imgurResponse.data.map(getImageUrl)).then(resolve))
       .catch(() => reject(`${albumHash} not found`));
+    });
   });
 }
 
 function getImage(imageHash) {
   return new Promise((resolve, reject) => {
-    const options = {
-      uri: `https://api.imgur.com/3/image/${imageHash}`,
-      headers: {
-        Authorization: `Client-ID ${credentials['Client-ID']}`
-      },
-      json: true
-    };
-    request(options)
+    getRemainingCredits().then(({ UserRemaining }) => {
+      if (UserRemaining < 50) {
+        reject('api calls limit reached');
+      }
+      const options = {
+        uri: `https://api.imgur.com/3/image/${imageHash}`,
+        headers: {
+          Authorization: `Client-ID ${credentials['Client-ID']}`
+        },
+        json: true
+      };
+      request(options)
       .then(imgurResponse => getImageUrl(imgurResponse.data).then(resolve))
       .catch(() => reject(`${imageHash} not found`));
+    });
   });
 }
 
