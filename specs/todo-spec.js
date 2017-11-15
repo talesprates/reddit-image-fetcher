@@ -4,10 +4,10 @@ const mkdirp = require('mkdirp-promise');
 const fs = require('fs');
 
 const IMAGE_NAME = 1;
-const directImagePattern = /^(.*((.jpg)|(.png)|(.gifv)|(.gif)|(.mp4)|(.jpeg)))(\?[0-9])?$/;
+const directImagePattern = /^(.*(\.jpe?g|\.png|\.mp4))(\?[0-9])?$/;
 const imgurGalleryPattern = /^.*\/a\/(.*)(#.*)?$/;
-const imgurImagePattern = /^.*\/(.*)$/;
-const gfycatImagePattern = /^.*\/(.*)$/;
+const imgurImagePattern = /^.*\/([^.]*)(\..*)?$/;
+const gfycatImagePattern = /^.*\/([^.]*)(\..*)?$/;
 let redditUserImagesCollection;
 let userPostPages;
 let userPosts;

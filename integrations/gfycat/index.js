@@ -8,13 +8,6 @@ module.exports = {
   getImage
 };
 
-// const pattern = /^.*\/(.*((.jpg)|(.png)|(.gifv)|(.gif)|(.mp4)))(\?[0-9])?$/;
-
-// testArray.forEach((element) => {
-//   console.log(`https://giant.gfycat.com/${element.match(pattern)[1]}.mp4`);
-//   console.log(`./users/${element.match(pattern)[1]}.mp4`);
-// });
-
 function authenticate() {
   const options = {
     method: 'POST',
@@ -45,6 +38,6 @@ function getImage(accessToken, gfyId) {
     };
     request(options)
       .then(data => resolve(data.gfyItem.mp4Url))
-      .catch(() => reject(`${gfyId} not found`));
+      .catch(() => reject(`gfycat ${gfyId} not found`));
   });
 }
