@@ -9,50 +9,42 @@ module.exports = {
 
 function getAlbum(albumHash) {
   return new Promise((resolve, reject) => {
-    getRemainingCredits().then(({ UserRemaining }) => {
-      if (UserRemaining < 50) {
-        reject('api calls limit reached');
-      }
-      const options = {
-        uri: `https://api.imgur.com/3/album/${albumHash}/images`,
-        headers: {
-          Authorization: `Client-ID ${credentials['Client-ID']}`
-        },
-        json: true
-      };
-      request(options)
-      .then(imgurResponse => Promise.all(imgurResponse.data.map(getImageUrl)).then(resolve))
-      .catch(() => reject(`${albumHash} not found`));
-    });
+    const options = {
+      uri: `https://api.imgur.com/3/album/${albumHash}/images`,
+      headers: {
+        Authorization: `Client-ID ${credentials['Client-ID']}`
+      },
+      json: true
+    };
+    request(options)
+      .then(imgurResponse => Promise.all(imgurResponse.data.map(getImageUrl)))
+      .then(resolve)
+      .catch(() => reject(`album ${albumHash} not found`));
   });
 }
 
 function getImage(imageHash) {
   return new Promise((resolve, reject) => {
-    getRemainingCredits().then(({ UserRemaining }) => {
-      if (UserRemaining < 50) {
-        reject('api calls limit reached');
-      }
-      const options = {
-        uri: `https://api.imgur.com/3/image/${imageHash}`,
-        headers: {
-          Authorization: `Client-ID ${credentials['Client-ID']}`
-        },
-        json: true
-      };
-      request(options)
-      .then(imgurResponse => getImageUrl(imgurResponse.data).then(resolve))
-      .catch(() => reject(`${imageHash} not found`));
-    });
+    const options = {
+      uri: `https://api.imgur.com/3/image/${imageHash}`,
+      headers: {
+        Authorization: `Client-ID ${credentials['Client-ID']}`
+      },
+      json: true
+    };
+    request(options)
+      .then(imgurResponse => getImageUrl(imgurResponse.data))
+      .then(({ link }) => resolve(link))
+      .catch(() => reject(`image ${imageHash} not found`));
   });
 }
 
 function getImageUrl(image) {
   return new Promise((resolve) => {
-    if (image.mp4) {
-      resolve(image.mp4);
-    }
-    resolve(image.link);
+    resolve({
+      id: image.id,
+      link: image.mp4 ? image.mp4 : image.link
+    });
   });
 }
 
