@@ -9,3 +9,9 @@ test-index\.js
 integrations/imgur/credentials\.js
 
 integrations/gfycat/credentials\.js
+
+\.idea/
+
+redditimagefetcher\.iml
+
+target/
