@@ -25,7 +25,7 @@ Promise.all(REDDIT_USERS.map((redditUser) => {
 })).then(() => mongo.closeConnnection());
 
 function findOrCreateImage(redditUser, hashCode, url) {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     mongo.findImage(hashCode).then((image) => {
       if (image) {
         return resolve(image);
@@ -41,13 +41,13 @@ function findOrCreateImage(redditUser, hashCode, url) {
         .then(link => fileExists(redditUser, link)
         .then(downloaded => mongo.createImage(hashCode, link, downloaded, redditUser)))
         .then(resolve)
-        .catch(error => resolve(`${error} from user ${redditUser}`));
+        .catch(error => reject(`${error} from user ${redditUser}`));
     });
   });
 }
 
 function findOrCreateGallery(redditUser, hashCode) {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     mongo.findGallery(hashCode).then((gallery) => {
       if (gallery) {
         return resolve(gallery);
@@ -58,7 +58,7 @@ function findOrCreateGallery(redditUser, hashCode) {
           Promise.all(images.map(image => findOrCreateImage(redditUser, image.id, image.link))))
         .then(() => mongo.createGallery(hashCode, redditUser))
         .then(resolve)
-        .catch(error => resolve(`${error} from user ${redditUser}`));
+        .catch(error => reject(`${error} from user ${redditUser}`));
     });
   });
 }

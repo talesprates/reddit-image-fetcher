@@ -17,9 +17,10 @@ function getAlbum(albumHash) {
       json: true
     };
     request(options)
-      .then(imgurResponse => Promise.all(imgurResponse.data.map(getImageUrl)))
+      .then(checkError)
+      .then(imgurResponse => Promise.all(imgurResponse.map(getImageUrl)))
       .then(resolve)
-      .catch(() => reject(`album ${albumHash} not found`));
+      .catch(error => reject(`album ${albumHash} ${error}`));
   });
 }
 
@@ -33,9 +34,24 @@ function getImage(imageHash) {
       json: true
     };
     request(options)
-      .then(imgurResponse => getImageUrl(imgurResponse.data))
+      .then(checkError)
+      .then(getImageUrl)
       .then(({ link }) => resolve(link))
-      .catch(() => reject(`image ${imageHash} not found`));
+      .catch(error => reject(`image ${imageHash} ${error}`));
+  });
+}
+
+function checkError(imgurResponse) {
+  return new Promise((resolve, reject) => {
+    if (imgurResponse.code === 200) {
+      resolve(imgurResponse.data);
+    } else if (imgurResponse.code === 404) {
+      reject('not found');
+    } else if (imgurResponse.code === 429) {
+      reject('too many requests');
+    } else {
+      reject('critical error');
+    }
   });
 }
 
