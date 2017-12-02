@@ -43,14 +43,14 @@ function getImage(imageHash) {
 
 function checkError(imgurResponse) {
   return new Promise((resolve, reject) => {
-    if (imgurResponse.code === 200) {
+    if (imgurResponse.status === 200) {
       resolve(imgurResponse.data);
-    } else if (imgurResponse.code === 404) {
+    } else if (imgurResponse.status === 404) {
       reject('not found');
-    } else if (imgurResponse.code === 429) {
+    } else if (imgurResponse.status === 429) {
       reject('too many requests');
     } else {
-      reject('critical error');
+      reject(imgurResponse.status, 'critical error');
     }
   });
 }

@@ -15,3 +15,5 @@ integrations/gfycat/credentials\.js
 redditimagefetcher\.iml
 
 target/
+
+rejectedImages.json

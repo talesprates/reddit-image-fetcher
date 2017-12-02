@@ -10,6 +10,8 @@ import org.bson.conversions.Bson;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class Mongo {
@@ -19,6 +21,8 @@ public class Mongo {
     private MongoCollection<Document> albumsCollection;
 
     public Mongo(String host, String database) {
+        Logger mongoLogger = Logger.getLogger( "org.mongodb.driver" );
+        mongoLogger.setLevel(Level.SEVERE);
         this.mongoClient = new MongoClient(host);
         this.mongoDatabase = this.mongoClient.getDatabase(database);
         this.imagesCollection = this.mongoDatabase.getCollection("images");
