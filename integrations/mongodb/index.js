@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const image = require('./image');
 const gallery = require('./gallery');
+const user = require('./user');
 
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/reddit-images-db');
@@ -15,5 +16,11 @@ module.exports = {
   getUserImages: image.getUserImages,
 
   createGallery: gallery.createGallery,
-  findGallery: gallery.findGallery
+  findGallery: gallery.findGallery,
+
+  findUsersByRating: user.findUsersByRating,
+  findUsersAboveRating: user.findUsersAboveRating,
+  createUser: user.createUser,
+  updateUserRating: user.updateUserRating,
+  addUserSubreddit: user.addUserSubreddit
 };
