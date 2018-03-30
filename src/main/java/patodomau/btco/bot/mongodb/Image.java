@@ -55,19 +55,11 @@ public class Image extends Document{
         this.downloaded = downloaded;
     }
 
-    public boolean exists() {
-        try {
-            return this.getFilepath().exists();
-        } catch (IOException e) {
-            return false;
-        }
-    }
-
-    private File getPath() throws IOException {
+    public File getPath() throws IOException {
         return this.getFilepath().getParentFile();
     }
 
-    private File getFilepath() throws IOException {
+    public File getFilepath() throws IOException {
         Pattern extractImagePattern = Pattern.compile(".*\\/((.*jpg)|(.*png)|(.*mp4)|(.*jpeg))(\\?[0-9])?");
         Matcher imageMatcher = extractImagePattern.matcher(this.link);
 
@@ -75,22 +67,25 @@ public class Image extends Document{
             throw new IOException();
         }
 
-        return new File("./users/" + this.user + "/" + imageMatcher.group(1));
+        return new File("/users/" + this.user + "/" + imageMatcher.group(1));
     }
 
-    public boolean download() {
-        if (this.exists()) {
-            return true;
-        }
-
+    public boolean download(File path) {
         try {
-            if (!this.getPath().exists()) {
-                this.getPath().mkdirs();
+            File imagePath = new File(path, this.getFilepath().getPath());
+            File userPath = new File(path, this.getPath().getPath());
+
+            if (imagePath.exists()) {
+                return true;
+            }
+
+            if (!userPath.exists()) {
+                userPath.mkdirs();
             }
 
             URL url = new URL(this.link);
             BufferedInputStream bis = new BufferedInputStream(url.openStream());
-            FileOutputStream fis = new FileOutputStream(this.getFilepath().getPath());
+            FileOutputStream fis = new FileOutputStream(imagePath.getPath());
             byte[] buffer = new byte[1024];
             int count = 0;
             while ((count = bis.read(buffer, 0, 1024)) != -1) {

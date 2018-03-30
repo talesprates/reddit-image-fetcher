@@ -17,3 +17,5 @@ redditimagefetcher\.iml
 target/
 
 rejectedImages.json
+
+reddit-image-fetcher\.jar

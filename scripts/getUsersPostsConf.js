@@ -4,7 +4,7 @@ const SpecReporter = require('jasmine-spec-reporter').SpecReporter;
 
 exports.config = {
   seleniumAddress: 'http://localhost:4444/wd/hub',
-  specs: ['specs/getUsersFromSubreddits.js'],
+  specs: ['../specs/getUsersPosts-spec.js'],
   jasmineNodeOpts: {
     showColors: true,
     includeStackTrace: true,

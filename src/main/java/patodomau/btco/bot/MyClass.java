@@ -7,12 +7,13 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class MyClass {
-    public static void main(String args[]) {
+    public static void main(String args[])  {
+        File path = new File(args[0]);
         Mongo mongo = new Mongo("localhost", "reddit-images-db");
         ArrayList<Image> undownloadedImages = mongo.getUndownloadedImages();
 
         for (Image image : undownloadedImages) {
-            if (image.download() && !image.isDownloaded()) {
+            if (image.download(path) && !image.isDownloaded()) {
                 mongo.updateImageDownload(image, true);
             }
         }

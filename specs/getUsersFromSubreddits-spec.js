@@ -1,8 +1,6 @@
 const { SUBREDDITS } = require('../variables');
 const subredditPage = require('../pages/subredditPage');
 const mongo = require('../integrations/mongodb');
-// const mkdirp = require('mkdirp-promise');
-// const fs = require('fs');
 
 let subredditPages;
 let subredditUsers;
@@ -30,7 +28,7 @@ SUBREDDITS.forEach((SUBREDDIT) => {
       });
     });
 
-    it('Get all images links from user\'s posts', () => {
+    it('Save users to mongo', () => {
       removeDuplicatesUsers(subredditUsers)
         .splice(2)
         .forEach(user => mongo.createUser(user, SUBREDDIT)

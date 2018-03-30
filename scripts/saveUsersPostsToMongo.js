@@ -1,15 +1,17 @@
 const fs = require('fs');
-const mongo = require('./integrations/mongodb/');
-const { REDDIT_USERS } = require('./variables');
-const imgur = require('./integrations/imgur');
-const gfycat = require('./integrations/gfycat');
+const path = require('path');
+const mongo = require('../integrations/mongodb/');
+const imgur = require('../integrations/imgur');
+const gfycat = require('../integrations/gfycat');
 
 const extractMediaPattern = /^.*\/(.*)(\.jpe?g|\.png|\.mp4)(\?[0-9])?$/;
 const ID = 1;
 const EXTENSION = 2;
+const rawUsersJson = fs.readFileSync(path.join(__dirname, '../users/users.json'));
+const REDDIT_USERS = JSON.parse(rawUsersJson);
 
 Promise.all(REDDIT_USERS.map((redditUser) => {
-  const rawJson = fs.readFileSync(`./users/${redditUser}/redditUserImagesCollection.json`);
+  const rawJson = fs.readFileSync(path.join(__dirname, `../users/${redditUser}/redditUserImagesCollection.json`));
   const { imgurImages, imgurGalleries, directImages, gfycatImages } = JSON.parse(rawJson);
 
   const p1 = Promise.all(imgurImages.map(hashCode =>
@@ -82,7 +84,7 @@ function fileExists(redditUser, file) {
   return new Promise((resolve) => {
     const fileName = file.match(extractMediaPattern)[ID];
     const fileExtension = file.match(extractMediaPattern)[EXTENSION];
-    fs.access(`./users/${redditUser}/${fileName}${fileExtension}`, fs.constants.R_OK, (err) => {
+    fs.access(`../users/${redditUser}/${fileName}${fileExtension}`, fs.constants.R_OK, (err) => {
       if (err) {
         resolve(false);
       }

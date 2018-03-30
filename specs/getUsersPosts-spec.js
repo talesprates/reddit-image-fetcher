@@ -1,7 +1,7 @@
-const { REDDIT_USERS } = require('../variables');
 const userPostsPage = require('../pages/userPostsPage');
 const mkdirp = require('mkdirp-promise');
 const fs = require('fs');
+const path = require('path');
 
 const IMAGE_NAME = 1;
 const directImagePattern = /^(.*(?:\.jpe?g|\.png|\.mp4))$/;
@@ -12,10 +12,13 @@ let redditUserImagesCollection;
 let userPostPages;
 let userPosts;
 
+const rawJson = fs.readFileSync(path.join(__dirname, '../users/users.json'));
+const REDDIT_USERS = JSON.parse(rawJson);
+
 REDDIT_USERS.forEach((REDDIT_USER) => {
   describe('Save to json all users posts images links', () => {
     beforeAll(() => {
-      mkdirp(`./users/${REDDIT_USER}/`)
+      mkdirp(path.join(__dirname, `../users/${REDDIT_USER}/`))
         .then(() => console.log(`directory ./users/${REDDIT_USER}/ created.`))
         .catch(console.log);
       userPostPages = [`https://www.reddit.com/user/${REDDIT_USER}/submitted/`];
@@ -50,7 +53,7 @@ REDDIT_USERS.forEach((REDDIT_USER) => {
     });
 
     it('Write user\'s images links into a json', () => {
-      fs.writeFile(`./users/${REDDIT_USER}/redditUserImagesCollection.json`, JSON.stringify(redditUserImagesCollection), 'utf8', (error) => {
+      fs.writeFile(path.join(__dirname, `../users/${REDDIT_USER}/redditUserImagesCollection.json`), JSON.stringify(redditUserImagesCollection), 'utf8', (error) => {
         if (error) {
           console.log('error writing file');
         }
