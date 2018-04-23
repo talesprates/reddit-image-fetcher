@@ -4,6 +4,7 @@ node_modules/
 variables\.js
 
 users/
+legacy-users/
 test-index\.js
 
 integrations/imgur/credentials\.js
@@ -19,3 +20,13 @@ target/
 rejectedImages.json
 
 reddit-image-fetcher\.jar
+
+\.classpath
+
+\.project
+
+\.settings/org\.eclipse\.jdt\.core\.prefs
+
+\.settings/org\.eclipse\.m2e\.core\.prefs
+
+integrations/reddit/credentials\.js

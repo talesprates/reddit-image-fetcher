@@ -60,7 +60,7 @@ public class Image extends Document{
     }
 
     public File getFilepath() throws IOException {
-        Pattern extractImagePattern = Pattern.compile(".*\\/((.*jpg)|(.*png)|(.*mp4)|(.*jpeg))(\\?[0-9])?");
+        Pattern extractImagePattern = Pattern.compile(".*\\/((.*jpg)|(.*png)|(.*mp4)|(.*jpeg))(\\?[0-9])?.*");
         Matcher imageMatcher = extractImagePattern.matcher(this.link);
 
         if (!imageMatcher.matches()) {
