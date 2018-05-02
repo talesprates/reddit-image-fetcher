@@ -8,12 +8,12 @@ let subredditUsers;
 SUBREDDITS.forEach((SUBREDDIT) => {
   describe('Save to json all users posts images links', () => {
     beforeAll(() => {
-      subredditPages = [`https://www.reddit.com/r/${SUBREDDIT}/`];
+      subredditPages = [`https://old.reddit.com/r/${SUBREDDIT}/`];
       subredditUsers = [];
     });
 
     it('Store two subreddit pages', () => {
-      browser.get(`https://www.reddit.com/r/${SUBREDDIT}/`);
+      browser.get(`https://old.reddit.com/r/${SUBREDDIT}/`);
       skipWarning();
       waitElementVisible($(subredditPage.postsTable));
       storePageUrl();

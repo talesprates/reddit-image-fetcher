@@ -4,6 +4,7 @@ node_modules/
 variables\.js
 
 users/
+users-ranked/
 legacy-users/
 test-index\.js
 

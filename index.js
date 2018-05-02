@@ -7,7 +7,7 @@ const imgur = require('./integrations/imgur');
 const mongo = require('./integrations/mongodb');
 
 const directImagePattern = /^(.*(?:\.jpe?g|\.png|\.mp4))(\?[0-9])?$/;
-const imgurGalleryPattern = /^.*\/(?:a|gallery)\/(.*)/;
+const imgurGalleryPattern = /^.*\/(?:a|gallery)\/([^#]*)?/;
 const imgurImagePattern = /^.*\/([^.]*)(\..*)?$/;
 const gfycatImagePattern = /^.*\/([^.]*)(\..*)?$/;
 const redditImagePattern = /^.*\?s=(.*)$/;
@@ -20,7 +20,7 @@ const EXTENSION = 2;
 
 
 mongo.findUsersAboveRating(NOT_BLOCKED_USERS)
-  .then(users => Promise.all(users.map(user => reddit.getUserPosts(user['_id']))))
+  .then(users => reddit.refreshToken().then(accessToken => Promise.all(users.map(user => reddit.getUserPosts(accessToken, user['_id'])))))
   .then(usersPosts => Promise.all(usersPosts.map(getPostImage)))
   .then(usersPostsImages => Promise.all(usersPostsImages.filter(post => post.author !== '').map(savePostImagesToMongo)))
   .then(() => mongo.closeConnnection());

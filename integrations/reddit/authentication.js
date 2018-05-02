@@ -59,11 +59,12 @@ function refreshToken() {
       form: {
         grant_type: 'refresh_token',
         refresh_token
-      }
+      },
+      json: true
     };
 
     request(options)
-      .then(resolve)
+      .then(response => resolve(response.access_token))
       .catch(reject);
   });
 }
