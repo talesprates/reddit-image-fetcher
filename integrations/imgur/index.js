@@ -20,7 +20,8 @@ function getAlbum(albumHash) {
       .then(checkError)
       .then(imgurResponse => Promise.all(imgurResponse.map(getImageUrl)))
       .then(resolve)
-      .catch(error => reject(`album ${albumHash} (${error.error.data.error})`));
+      // .catch(error => reject(`album ${albumHash} (${error.error.data.error})`));
+      .catch(error => reject(`album ${albumHash}`));
   });
 }
 
@@ -37,7 +38,8 @@ function getImage(imageHash) {
       .then(checkError)
       .then(getImageUrl)
       .then(({ link }) => resolve(link))
-      .catch(error => reject(`image ${imageHash} (${error.error.data.error})`));
+      // .catch(error => reject(`image ${imageHash} (${error.error.data.error})`));
+      .catch(error => reject(`image ${imageHash}`));
   });
 }
 
