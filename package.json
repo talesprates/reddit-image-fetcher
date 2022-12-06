@@ -21,7 +21,7 @@
     "jasmine-spec-reporter": "^3.3.0",
     "mkdirp-promise": "^5.0.1",
     "mongoose": "4.10.8",
-    "node-wget": "^0.4.2",
+    "node-wget": "^0.4.3",
     "protractor": "^5.1.1",
     "request": "^2.83.0",
     "request-promise": "^4.2.2",
